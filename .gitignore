@@ -4,8 +4,8 @@
 /.env.local.php
 /.env.*.local
 /public/bundles/
-/var/
-/vendor/
+var/
+vendor/
 ###< symfony/framework-bundle ###
 
 ###> symfony/webpack-encore-bundle ###
@@ -22,3 +22,12 @@ db/
 .idea
 docker-compose.override.yml
 .env
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###

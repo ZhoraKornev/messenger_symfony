@@ -2,7 +2,10 @@ version: '3.4'
 services:
     db:
         ports:
-            - "3564:3306"
+            - "5469:5432"
     nginx:
         ports:
             - "8856:80"
+    test-db:
+        ports:
+            - '8070:5432'
