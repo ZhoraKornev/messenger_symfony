@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\ImagePost;
@@ -19,9 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ImagePostController extends AbstractController
 {
-    /**
-     * @Route("/api/images", methods="GET")
-     */
+    #[Route('/api/images', methods: ['GET'])]
     public function list(ImagePostRepository $repository)
     {
         $posts = $repository->findBy([], ['createdAt' => 'DESC']);
@@ -31,9 +31,7 @@ class ImagePostController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/api/images", methods="POST")
-     */
+    #[Route('/api/images', methods: ['POST'])]
     public function create(Request $request, ValidatorInterface $validator, PhotoFileManager $photoManager, EntityManagerInterface $entityManager, PhotoPonkaficator $ponkaficator)
     {
         /** @var UploadedFile $imageFile */
@@ -72,9 +70,7 @@ class ImagePostController extends AbstractController
         return $this->toJson($imagePost, 201);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="DELETE")
-     */
+    #[Route('/api/images/{id}', methods: ['DELETE'])]
     public function delete(ImagePost $imagePost, EntityManagerInterface $entityManager, PhotoFileManager $photoManager)
     {
         $photoManager->deleteImage($imagePost->getFilename());
@@ -85,9 +81,7 @@ class ImagePostController extends AbstractController
         return new Response(null, 204);
     }
 
-    /**
-     * @Route("/api/images/{id}", methods="GET", name="get_image_post_item")
-     */
+    #[Route('/api/images/{id}', name: 'get_image_post_item', methods: ['GET'])]
     public function getItem(ImagePost $imagePost)
     {
         return $this->toJson($imagePost);
