@@ -5,7 +5,7 @@ namespace App\Photo;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Constraint;
 use Intervention\Image\ImageManager;
-use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\FilesystemInterface;
 use Symfony\Component\Finder\Finder;
 
 class PhotoPonkaficator
@@ -14,7 +14,7 @@ class PhotoPonkaficator
     private $imageManager;
     private $photoFilesystem;
 
-    public function __construct(EntityManagerInterface $entityManager, ImageManager $imageManager, FilesystemAdapter $photoFilesystem)
+    public function __construct(EntityManagerInterface $entityManager, ImageManager $imageManager, FilesystemInterface $photoFilesystem)
     {
         $this->entityManager = $entityManager;
         $this->imageManager = $imageManager;
