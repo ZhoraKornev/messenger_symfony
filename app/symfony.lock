@@ -123,11 +123,26 @@
     "league/mime-type-detection": {
         "version": "1.8.0"
     },
+    "league/oauth2-server-bundle": {
+        "version": "v0.2.0"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
     "nikic/php-parser": {
         "version": "v4.10.4"
+    },
+    "nyholm/psr7": {
+        "version": "1.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "0cd4d2d0e7f646fda75f9944f747a56e6ed13d4c"
+        },
+        "files": [
+            "config/packages/nyholm_psr7.yaml"
+        ]
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

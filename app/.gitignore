@@ -14,7 +14,7 @@ app/var
 app/public_html/bundles/
 !app/.env
 app/.env.*
-
+.env
 app/.phpunit
 app/.phpunit.result.cache
 app/phpunit.xml
@@ -28,4 +28,5 @@ app/phpunit.xml
 /public_html/build/
 npm-debug.log
 yarn-error.log
+/config/oauth/*.key
 ###< symfony/webpack-encore-bundle ###

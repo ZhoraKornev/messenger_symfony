@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.9",
         "intervention/image": "^2.4",
         "league/flysystem-bundle": "^1.0",
+        "league/oauth2-server-bundle": "*",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/asset": "5.3.*",
