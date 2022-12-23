@@ -1,11 +1,21 @@
 version: '3.4'
 services:
     db:
+        container_name: messenger_symfony_dev_db
         ports:
             - "5469:5432"
     nginx:
+        container_name: messenger_symfony_dev_nginx
         ports:
             - "8856:80"
     test-db:
+        container_name: messenger_symfony_dev_test-db
         ports:
             - '8070:5432'
+        environment:
+            POSTGRES_DB: messenger_app
+            POSTGRES_USER: app_user
+            POSTGRES_PASSWORD: app_pass
+    php:
+        container_name: messenger_symfony_dev_php
+

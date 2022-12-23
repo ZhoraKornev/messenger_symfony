@@ -3,7 +3,6 @@ version:  '3.9'
 services:
     db:
         image: postgres:11.12-alpine
-        container_name: messenger_symfony_${APP_ENV}_db
         cap_add:
             - SYS_NICE
         environment:
@@ -17,13 +16,8 @@ services:
 
     test-db:
         image: postgres:11.12-alpine
-        container_name: messenger_symfony_${APP_ENV}_test-db
         cap_add:
             - SYS_NICE
-        environment:
-            POSTGRES_DB: messenger_app
-            POSTGRES_USER: app_user
-            POSTGRES_PASSWORD: app_pass
         # volumes are not persisted in test db
         ports:
             - '8070:5432' # notice different OUT port than in default database
@@ -38,7 +32,6 @@ services:
             args:
                 ENV: dev # choose environment (dev/test/prod)
                 TIMEZONE: Europe/Warsaw # change according to your needs
-        container_name: messenger_symfony_${APP_ENV}_php
         expose:
             - '9000'
         env_file:
@@ -52,7 +45,6 @@ services:
 
     nginx:
         build: docker/nginx
-        container_name: messenger_symfony_${APP_ENV}_nginx
         depends_on:
             - db
             - php
