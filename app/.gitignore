@@ -8,16 +8,17 @@ docker-compose.yml
 
 ###
 
-app/bin/.phpunit
-app/vendor
-app/var
-app/public_html/bundles/
-!app/.env
-app/.env.*
+bin/.phpunit
+vendor
+var
+public_html/bundles/
+public_html/uploads
+.env
+.env.*
 
-app/.phpunit
-app/.phpunit.result.cache
-app/phpunit.xml
+.phpunit
+.phpunit.result.cache
+phpunit.xml
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
