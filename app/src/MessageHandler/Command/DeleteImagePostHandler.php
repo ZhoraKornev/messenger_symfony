@@ -11,10 +11,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use function sprintf;
 
-class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInterface
+class DeleteImagePostHandler implements MessageSubscriberInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -42,5 +43,14 @@ class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInte
         $this->entityManager->flush();
 
         $this->eventBus->dispatch(new ImagePostDeletedEvent($fileName));
+    }
+
+    public static function getHandledMessages(): iterable
+    {
+        yield DeleteImagePost::class => [
+            'method' => '__invoke',
+            'priority' => 10,
+//            'form_transport' => 'async'
+        ];
     }
 }
