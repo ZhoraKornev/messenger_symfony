@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Message;
-
-use App\Entity\ImagePost;
+namespace App\Message\Command;
 
 class DeleteImagePost
 {
