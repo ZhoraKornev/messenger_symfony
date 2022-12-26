@@ -18,4 +18,8 @@ services:
             POSTGRES_PASSWORD: app_pass
     php:
         container_name: messenger_symfony_dev_php
+        build:
+            args:
+                ENV: dev # choose environment (dev/test/prod)
+                TIMEZONE: Europe/Kiev # change according to your needs
 

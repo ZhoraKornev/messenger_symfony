@@ -12,7 +12,7 @@ services:
         volumes:
             - './bin/postgresql/:/var/lib/postgresql/data'
         networks:
-            - messenger_network
+            - messenger_symfony_network
 
     test-db:
         image: postgres:11.12-alpine
@@ -22,16 +22,13 @@ services:
         ports:
             - '8070:5432' # notice different OUT port than in default database
         networks:
-            - messenger_network
+            - messenger_symfony_network
 
     php:
         build:
             context: docker/php
             dockerfile: Dockerfile
             network: host
-            args:
-                ENV: dev # choose environment (dev/test/prod)
-                TIMEZONE: Europe/Warsaw # change according to your needs
         expose:
             - '9000'
         env_file:
@@ -41,7 +38,7 @@ services:
         volumes:
             - './app/:/var/www/app:cached'
         networks:
-            - messenger_network
+            - messenger_symfony_network
 
     nginx:
         build: docker/nginx
@@ -52,11 +49,11 @@ services:
             - './app/:/var/www/app:cached'
             - './logs/nginx:/var/log/nginx'
         networks:
-            - messenger_network
+                - messenger_symfony_network
 
 networks:
-    messenger_network:
+    messenger_symfony_network:
         driver: bridge
         ipam:
             config:
-                - subnet: 172.65.67.0/24
+                - subnet: f/24

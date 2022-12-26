@@ -4,6 +4,9 @@ MAIN repo where this update peoject come - https://github.com/MadCzarls/symfonyc
 
 https://symfonycasts.com/screencast/messenger
 
+to fix flex run
+composer update symfony/flex --no-plugins --no-scripts
+
 Running on Docker (utilizing docker-compose) with PHP 8.0 + nginx 1.18 + PostgreSQL. By default, includes xdebug extension and PHP_CodeSniffer for easy development and basic configuration for opcache for production. Includes instruction for setting it in PhpStorm.
 
 - https://symfony.com/
