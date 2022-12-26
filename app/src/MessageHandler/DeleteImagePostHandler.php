@@ -1,30 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MessageHandler;
 
 use App\Message\DeleteImagePost;
 use App\Message\DeletePhotoFile;
+use App\Repository\ImagePostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class DeleteImagePostHandler implements MessageHandlerInterface
+use function sprintf;
+
+class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     public function __construct(
-        private MessageBusInterface    $messageBus,
+        private MessageBusInterface $messageBus,
         private EntityManagerInterface $entityManager,
-    )
-    {
+        private ImagePostRepository $imagePostRepository,
+    ) {
     }
 
-    public function __invoke(DeleteImagePost $deleteImagePost)
+    public function __invoke(DeleteImagePost $deleteImagePost): void
     {
-        $imagePost = $deleteImagePost->getImagePost();
-        $fileName = $imagePost->getFilename();
+        $imagePost = $this->imagePostRepository->find($deleteImagePost->getImagePostId());
+
+        if (!$imagePost) {
+            if ($this->logger) {
+                $this->logger->error(
+                    sprintf("ImagePost with ID '%d' does not exist", $deleteImagePost->getImagePostId())
+                );
+            }
+
+            return;
+        }
 
         $this->entityManager->remove($imagePost);
         $this->entityManager->flush();
 
-        $this->messageBus->dispatch(new DeletePhotoFile($fileName));
+        $this->messageBus->dispatch(new DeletePhotoFile($imagePost->getFilename()));
     }
 }

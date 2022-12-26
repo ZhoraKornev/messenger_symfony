@@ -15,6 +15,4 @@ class DeletePhotoFile
     {
         return $this->filename;
     }
-
-
 }

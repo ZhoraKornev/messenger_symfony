@@ -7,18 +7,22 @@ namespace App\Serializer\Normalizer;
 use App\Entity\ImagePost;
 use App\Photo\PhotoFileManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class ImagePostNormalizer implements NormalizerInterface, CacheableSupportsMethodInterface
 {
-    private $normalizer;
-    private $uploaderManager;
-    private $router;
+    private ObjectNormalizer $normalizer;
+    private PhotoFileManager $uploaderManager;
+    private UrlGeneratorInterface $router;
 
-    public function __construct(ObjectNormalizer $normalizer, PhotoFileManager $uploaderManager, UrlGeneratorInterface $router)
-    {
+    public function __construct(
+        ObjectNormalizer $normalizer,
+        PhotoFileManager $uploaderManager,
+        UrlGeneratorInterface $router
+    ) {
         $this->normalizer = $normalizer;
         $this->uploaderManager = $uploaderManager;
         $this->router = $router;
@@ -26,8 +30,13 @@ class ImagePostNormalizer implements NormalizerInterface, CacheableSupportsMetho
 
     /**
      * @param ImagePost $imagePost
+     * @param null $format
+     * @param mixed[] $context
+     *
+     * @return mixed[]
+     * @throws ExceptionInterface
      */
-    public function normalize($imagePost, $format = null, array $context = array()): array
+    public function normalize($imagePost, $format = null, array $context = []): array
     {
         $data = $this->normalizer->normalize($imagePost, $format, $context);
 
@@ -42,6 +51,10 @@ class ImagePostNormalizer implements NormalizerInterface, CacheableSupportsMetho
         return $data;
     }
 
+    /**
+     * @param mixed       $data
+     * @param string|null $format
+     */
     public function supportsNormalization($data, $format = null): bool
     {
         return $data instanceof ImagePost;

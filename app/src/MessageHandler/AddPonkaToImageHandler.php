@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MessageHandler;
 
 use App\Message\AddPonkaToImage;
@@ -11,41 +13,43 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
+use function sprintf;
+
 class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     public function __construct(
-        private PhotoPonkaficator  $ponkaficator,
+        private PhotoPonkaficator $ponkaficator,
         private PhotoFileManager $photoManager,
-        private EntityManagerInterface $entityManager,
         private ImagePostRepository $imagePostRepository,
-    )
-    {
-
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
-    public function __invoke(AddPonkaToImage $addPonkaToImage)
+    public function __invoke(AddPonkaToImage $addPonkaToImage): void
     {
         $imagePostId = $addPonkaToImage->getImagePostId();
         $imagePost = $this->imagePostRepository->find($imagePostId);
-        if (!$imagePost){
+
+        if (!$imagePost) {
+            //could throw an exception but the message would be retried which we don't want here
+            //or return and this message will be discarded
             if ($this->logger) {
-                $this->logger->alert(sprintf('Image post %d is missing in DB', $imagePostId));
+                // check for unit testing - since for test we will need to call 'setLogger'
+                // on this object explicitly
+                $this->logger->alert(sprintf('Image post with id %d was missing', $imagePostId));
             }
             return;
-        }
-        if (rand(0,10) < 7 || true ){
-            throw new \Exception('random');
         }
 
         $updatedContents = $this->ponkaficator->ponkafy(
             $this->photoManager->read($imagePost->getFilename())
         );
-
         $this->photoManager->update($imagePost->getFilename(), $updatedContents);
         $imagePost->markAsPonkaAdded();
-        $this->entityManager->flush();
 
+        $this->entityManager->persist($imagePost);
+        $this->entityManager->flush();
     }
 }
