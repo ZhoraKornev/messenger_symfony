@@ -59,7 +59,6 @@ COPY config/docker-php-memlimit.ini /usr/local/etc/php/conf.d/docker-php-memlimi
 
 COPY supervisor/* /etc/supervisor/conf.d/
 
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
 ARG TIMEZONE
@@ -70,4 +69,4 @@ WORKDIR /var/www/app
 
 RUN usermod -u 1000 www-data
 
- CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord"]

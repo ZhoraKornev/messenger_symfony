@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Message\DeleteImagePost;
-use App\Message\DeletePhotoFile;
+use App\Message\Event\ImagePostDeletedEvent;
 use App\Repository\ImagePostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -20,9 +20,9 @@ class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInte
     use LoggerAwareTrait;
 
     public function __construct(
-        private MessageBusInterface $messageBus,
+        private MessageBusInterface    $eventBus,
         private EntityManagerInterface $entityManager,
-        private ImagePostRepository $imagePostRepository,
+        private ImagePostRepository    $imagePostRepository,
     ) {
     }
 
@@ -42,6 +42,6 @@ class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInte
         $this->entityManager->remove($imagePost);
         $this->entityManager->flush();
 
-        $this->messageBus->dispatch(new DeletePhotoFile($fileName));
+        $this->eventBus->dispatch(new ImagePostDeletedEvent($fileName));
     }
 }
