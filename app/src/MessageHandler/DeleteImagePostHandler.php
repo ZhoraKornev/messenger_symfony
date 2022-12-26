@@ -31,18 +31,17 @@ class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInte
         $imagePost = $this->imagePostRepository->find($deleteImagePost->getImagePostId());
 
         if (!$imagePost) {
-            if ($this->logger) {
-                $this->logger->error(
-                    sprintf("ImagePost with ID '%d' does not exist", $deleteImagePost->getImagePostId())
-                );
-            }
+            $this->logger?->error(
+                sprintf("ImagePost with ID '%d' does not exist", $deleteImagePost->getImagePostId())
+            );
 
             return;
         }
+        $fileName = $imagePost->getFilename();
 
         $this->entityManager->remove($imagePost);
         $this->entityManager->flush();
 
-        $this->messageBus->dispatch(new DeletePhotoFile($imagePost->getFilename()));
+        $this->messageBus->dispatch(new DeletePhotoFile($fileName));
     }
 }
