@@ -19,21 +19,12 @@ class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInte
 {
     use LoggerAwareTrait;
 
-    private PhotoPonkaficator $ponkaficator;
-    private PhotoFileManager $photoManager;
-    private ImagePostRepository $imagePostRepository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        PhotoPonkaficator $ponkaficator,
-        PhotoFileManager $photoManager,
-        ImagePostRepository $imagePostRepository,
-        EntityManagerInterface $entityManager
+        private PhotoPonkaficator $ponkaficator,
+        private PhotoFileManager $photoManager,
+        private ImagePostRepository $imagePostRepository,
+        private EntityManagerInterface $entityManager
     ) {
-        $this->ponkaficator = $ponkaficator;
-        $this->photoManager = $photoManager;
-        $this->imagePostRepository = $imagePostRepository;
-        $this->entityManager = $entityManager;
     }
 
     public function __invoke(AddPonkaToImage $addPonkaToImage): void
@@ -53,10 +44,6 @@ class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInte
 
             return;
         }
-//
-//        if (rand(0, 10)< 7 || true) {
-//            throw new \Exception('I failed randomly!!');
-//        }
 
         $updatedContents = $this->ponkaficator->ponkafy(
             $this->photoManager->read($imagePost->getFilename())

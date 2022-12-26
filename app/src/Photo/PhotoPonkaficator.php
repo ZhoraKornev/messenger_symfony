@@ -16,18 +16,9 @@ use function sleep;
 
 class PhotoPonkaficator
 {
-    private EntityManagerInterface $entityManager;
-    private ImageManager $imageManager;
-    private FilesystemInterface $photoFilesystem;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ImageManager $imageManager,
-        FilesystemInterface $photoFilesystem
+        private ImageManager $imageManager,
     ) {
-        $this->entityManager = $entityManager;
-        $this->imageManager = $imageManager;
-        $this->photoFilesystem = $photoFilesystem;
     }
 
     public function ponkafy(string $imageContents): string

@@ -7,15 +7,12 @@ use App\Entity\ImagePost;
 class DeleteImagePost
 {
 
-    public function __construct(private ImagePost $imagePost)
+    public function __construct(private int $imagePostId)
     {
     }
 
-    /**
-     * @return ImagePost
-     */
-    public function getImagePost(): ImagePost
+    public function getImagePostId(): int
     {
-        return $this->imagePost;
+        return $this->imagePostId;
     }
 }
