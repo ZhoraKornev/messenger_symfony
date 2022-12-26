@@ -19,12 +19,21 @@ class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInte
 {
     use LoggerAwareTrait;
 
+    private PhotoPonkaficator $ponkaficator;
+    private PhotoFileManager $photoManager;
+    private ImagePostRepository $imagePostRepository;
+    private EntityManagerInterface $entityManager;
+
     public function __construct(
-        private PhotoPonkaficator $ponkaficator,
-        private PhotoFileManager $photoManager,
-        private ImagePostRepository $imagePostRepository,
-        private EntityManagerInterface $entityManager
+        PhotoPonkaficator $ponkaficator,
+        PhotoFileManager $photoManager,
+        ImagePostRepository $imagePostRepository,
+        EntityManagerInterface $entityManager
     ) {
+        $this->ponkaficator = $ponkaficator;
+        $this->photoManager = $photoManager;
+        $this->imagePostRepository = $imagePostRepository;
+        $this->entityManager = $entityManager;
     }
 
     public function __invoke(AddPonkaToImage $addPonkaToImage): void
@@ -35,13 +44,19 @@ class AddPonkaToImageHandler implements MessageHandlerInterface, LoggerAwareInte
         if (!$imagePost) {
             //could throw an exception but the message would be retried which we don't want here
             //or return and this message will be discarded
+
             if ($this->logger) {
                 // check for unit testing - since for test we will need to call 'setLogger'
                 // on this object explicitly
                 $this->logger->alert(sprintf('Image post with id %d was missing', $imagePostId));
             }
+
             return;
         }
+//
+//        if (rand(0, 10)< 7 || true) {
+//            throw new \Exception('I failed randomly!!');
+//        }
 
         $updatedContents = $this->ponkaficator->ponkafy(
             $this->photoManager->read($imagePost->getFilename())

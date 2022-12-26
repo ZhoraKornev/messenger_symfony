@@ -7,8 +7,6 @@ namespace App\Photo;
 use App\Entity\ImagePost;
 use Exception;
 use League\Flysystem\AdapterInterface;
-use League\Flysystem\FileExistsException;
-use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,6 +15,7 @@ use function fclose;
 use function fopen;
 use function is_resource;
 use function pathinfo;
+use function sleep;
 use function sprintf;
 use function uniqid;
 
@@ -24,16 +23,15 @@ use const PATHINFO_FILENAME;
 
 class PhotoFileManager
 {
-    public function __construct(
-        private FilesystemInterface $photoFilesystem,
-        private string $publicAssetBaseUrl
-    ){
+    private FilesystemInterface $filesystem;
+    private string $publicAssetBaseUrl;
+
+    public function __construct(FilesystemInterface $photoFilesystem, string $publicAssetBaseUrl)
+    {
+        $this->filesystem = $photoFilesystem;
+        $this->publicAssetBaseUrl = $publicAssetBaseUrl;
     }
 
-    /**
-     * @throws FileExistsException
-     * @throws Exception
-     */
     public function uploadImage(File $file): string
     {
         if ($file instanceof UploadedFile) {
@@ -44,7 +42,7 @@ class PhotoFileManager
 
         $newFilename = pathinfo($originalFilename, PATHINFO_FILENAME) . '-' . uniqid() . '.' . $file->guessExtension();
         $stream = fopen($file->getPathname(), 'r');
-        $result = $this->photoFilesystem->writeStream(
+        $result = $this->filesystem->writeStream(
             $newFilename,
             $stream,
             [
@@ -63,12 +61,9 @@ class PhotoFileManager
         return $newFilename;
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function deleteImage(string $filename): void
     {
-        $this->photoFilesystem->delete($filename);
+        $this->filesystem->delete($filename);
     }
 
     public function getPublicPath(ImagePost $imagePost): string
@@ -76,19 +71,13 @@ class PhotoFileManager
         return $this->publicAssetBaseUrl . '/' . $imagePost->getFilename();
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function read(string $filename): string
     {
-        return $this->photoFilesystem->read($filename);
+        return $this->filesystem->read($filename);
     }
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function update(string $filename, string $updatedContents): void
     {
-        $this->photoFilesystem->update($filename, $updatedContents);
+        $this->filesystem->update($filename, $updatedContents);
     }
 }

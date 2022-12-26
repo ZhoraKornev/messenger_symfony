@@ -19,11 +19,18 @@ class DeleteImagePostHandler implements MessageHandlerInterface, LoggerAwareInte
 {
     use LoggerAwareTrait;
 
+    private MessageBusInterface $messageBus;
+    private EntityManagerInterface $entityManager;
+    private ImagePostRepository $imagePostRepository;
+
     public function __construct(
-        private MessageBusInterface $messageBus,
-        private EntityManagerInterface $entityManager,
-        private ImagePostRepository $imagePostRepository,
+        MessageBusInterface $messageBus,
+        EntityManagerInterface $entityManager,
+        ImagePostRepository $imagePostRepository,
     ) {
+        $this->messageBus = $messageBus;
+        $this->entityManager = $entityManager;
+        $this->imagePostRepository = $imagePostRepository;
     }
 
     public function __invoke(DeleteImagePost $deleteImagePost): void

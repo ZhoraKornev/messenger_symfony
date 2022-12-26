@@ -1,21 +1,22 @@
 <?php
 
-namespace App\Middleware;
+declare(strict_types=1);
+
+namespace App\Stamp;
 
 use Symfony\Component\Messenger\Stamp\StampInterface;
 
+use function uniqid;
+
 class UniqueIdStamp implements StampInterface
 {
+    private string $uniqueId;
 
-
-    public function __construct(private string $uniqueId)
+    public function __construct()
     {
         $this->uniqueId = uniqid();
     }
 
-    /**
-     * @return string
-     */
     public function getUniqueId(): string
     {
         return $this->uniqueId;
