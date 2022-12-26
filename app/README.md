@@ -1,6 +1,6 @@
 # Description
 
-MAIN repo where this update peoject come - https://raw.githubusercontent.com/MadCzarls/symfonycasts-messenger/
+MAIN repo where this update peoject come - https://github.com/MadCzarls/symfonycasts-messenger
 
 https://symfonycasts.com/screencast/messenger
 

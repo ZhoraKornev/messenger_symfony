@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\ImagePost;
 use App\Message\AddPonkaToImage;
 use App\Message\DeleteImagePost;
-use App\Photo\PhotoPonkaficator;
 use App\Repository\ImagePostRepository;
 use App\Photo\PhotoFileManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +15,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -36,12 +37,13 @@ class ImagePostController extends AbstractController
 
     #[Route('/api/images', methods: ['POST'])]
     public function create(
-        Request $request,
-        ValidatorInterface $validator,
-        PhotoFileManager $photoManager,
+        Request                $request,
+        ValidatorInterface     $validator,
+        PhotoFileManager       $photoManager,
         EntityManagerInterface $entityManager,
-        MessageBusInterface $messageBus
-    ) {
+        MessageBusInterface    $messageBus
+    )
+    {
         /** @var UploadedFile $imageFile */
         $imageFile = $request->files->get('file');
 
@@ -62,17 +64,11 @@ class ImagePostController extends AbstractController
         $entityManager->persist($imagePost);
         $entityManager->flush();
 
-        $message= new AddPonkaToImage($imagePost);
-        $messageBus->dispatch($message);
-        /*
-         * Start Ponkafication!
-         */
+        $message = new AddPonkaToImage($imagePost->getId());
+        $envelope = new Envelope($message, [new DelayStamp(500)]);
+        $messageBus->dispatch($envelope);
 
-        /*
-         * You've been Ponkafied!
-         */
-
-        return $this->toJson($imagePost, 201);
+        return $this->toJson($imagePost, Response::HTTP_CREATED);
     }
 
     #[Route('/api/images/{id}', methods: ['DELETE'])]
@@ -89,7 +85,7 @@ class ImagePostController extends AbstractController
         return $this->toJson($imagePost);
     }
 
-    private function toJson($data, int $status = 200, array $headers = [], array $context = []): JsonResponse
+    private function toJson($data, int $status = Response::HTTP_OK, array $headers = [], array $context = []): JsonResponse
     {
         // add the image:output group by default
         if (!isset($context['groups'])) {
