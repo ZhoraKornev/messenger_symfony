@@ -6,6 +6,8 @@ public/uploads/images
 db/
 .idea
 docker-compose.override.yml
+rabbitmq-persistence
+course-messenger.pdf
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache

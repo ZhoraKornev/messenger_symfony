@@ -57,7 +57,7 @@ RUN docker-php-source delete
 COPY config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY config/docker-php-memlimit.ini /usr/local/etc/php/conf.d/docker-php-memlimit.ini
 
-COPY supervisor/* /etc/supervisor/conf.d/
+#COPY supervisor/* /etc/supervisor/conf.d/
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
@@ -69,4 +69,4 @@ WORKDIR /var/www/app
 
 RUN usermod -u 1000 www-data
 
-CMD ["/usr/bin/supervisord"]
+#CMD ["/usr/bin/supervisord"]

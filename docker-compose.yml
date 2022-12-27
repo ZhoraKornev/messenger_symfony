@@ -31,14 +31,27 @@ services:
             network: host
         expose:
             - '9000'
-        env_file:
-            - docker/php/.env # ! create this file ! - choose environment (dev/test/prod) and copy correct template .dist file
         depends_on:
             - db
         volumes:
             - './app/:/var/www/app:cached'
         networks:
             - messenger_symfony_network
+
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: messenger_rabbitmq
+        hostname: rabbitmq_messenger
+        volumes:
+            - ./rabbitmq/data/:/var/lib/rabbitmq/
+        ports:
+            - 15444:15672
+            - 5699:5672
+        networks:
+            - messenger_symfony_network
+        environment:
+            RABBITMQ_DEFAULT_USER: user
+            RABBITMQ_DEFAULT_PASS: pass
 
     nginx:
         build: docker/nginx
