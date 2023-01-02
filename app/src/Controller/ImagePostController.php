@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpStamp;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
@@ -66,7 +67,8 @@ class ImagePostController extends AbstractController
         $envelope = new Envelope(
             $message,
             [
-//                new DelayStamp(500)
+                new DelayStamp(1000),
+                new AmqpStamp('normal')
             ]
         );
 

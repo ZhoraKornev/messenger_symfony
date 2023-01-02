@@ -39,9 +39,14 @@ services:
             - messenger_symfony_network
 
     rabbitmq:
-        image: rabbitmq:3-management-alpine
+        image: rabbitmq:3.8-management-alpine
         container_name: messenger_rabbitmq
-        hostname: rabbitmq_messenger
+        restart: unless-stopped
+        environment:
+            - RABBITMQ_ERLANG_COOKIE=7ead507151fc4461b9f45c1161384a04
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+            - RABBITMQ_DEFAULT_VHOST=/
         volumes:
             - ./rabbitmq/data/:/var/lib/rabbitmq/
         ports:

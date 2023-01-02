@@ -8,6 +8,7 @@ db/
 docker-compose.override.yml
 rabbitmq-persistence
 course-messenger.pdf
+rabbitmq
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
