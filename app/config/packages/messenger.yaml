@@ -28,6 +28,14 @@ framework:
                     queues:
                         messages_high:
                             binding_keys: [high]
+            external_messages:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                serializer: App\Messenger\ExternalJsonMessageSerializer
+                options:
+                    auto_setup: false
+                    queues:
+                        messages_form_external: ~
+
             failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
@@ -41,9 +49,9 @@ framework:
             command.bus:
                 default_middleware: true
                 middleware:
-                    - App\Middleware\AuditMiddleware
+                    - App\Messenger\AuditMiddleware
             event.bus:
                 default_middleware: allow_no_handlers
                 middleware:
-                    - App\Middleware\AuditMiddleware
+                    - App\Messenger\AuditMiddleware
             query.bus: ~
