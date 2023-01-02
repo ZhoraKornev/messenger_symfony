@@ -74,7 +74,6 @@ class ImagePostController extends AbstractController
         );
 
         $messageBus->dispatch($envelope);
-        $messageBus->dispatch(new LogEmoji(2));
 
         return $this->toJson($imagePost, Response::HTTP_CREATED);
     }

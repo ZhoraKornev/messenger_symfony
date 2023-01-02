@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Messenger;
 
-use App\Stamp\UniqueIdStamp;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
